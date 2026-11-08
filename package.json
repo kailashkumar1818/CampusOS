@@ -1,0 +1,12 @@
+{
+  "name": "campusos-monorepo",
+  "version": "1.0.0",
+  "description": "CampusOS Complete University Management Ecosystem - Monorepo Orchestrator",
+  "private": true,
+  "scripts": {
+    "server": "npm run dev --prefix server",
+    "client": "npm run dev --prefix client",
+    "build": "npm run build --prefix client",
+    "seed": "npm run prisma:seed --prefix server"
+  }
+}
