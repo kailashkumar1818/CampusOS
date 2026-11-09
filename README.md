@@ -1,3 +1,7 @@
+<img width="2818" height="1515" alt="dashboard" src="https://github.com/user-attachments/assets/f050a5e0-342f-48ec-b4c2-7e02a232abb6" />
+
+---
+
 # CampusOS - University Management Platform
 
 CampusOS is a centralized university management system designed for students, faculty members, and academic administrators. It provides role-based access control, real-time notifications, academic workflow management, attendance tracking, coursework submissions, examinations, hostel grievance triage, and analytics.
@@ -255,6 +259,23 @@ Base URL: `http://localhost:5000/api/v1`
 | `/health` | API gateway health check | `GET /health` |
 
 ---
+
+## UI Screenshots
+
+**Time Table**
+
+<img width="2815" height="1517" alt="timetable" src="https://github.com/user-attachments/assets/c097458f-4f87-4e20-8d43-f1db7427aecb" />
+
+**Assignement Dashboard**
+
+<img width="2818" height="1519" alt="assignemnt" src="https://github.com/user-attachments/assets/75601239-6ace-453a-b1e0-f7a8216e500e" />
+
+**Home Page**
+
+<img width="2818" height="1520" alt="home" src="https://github.com/user-attachments/assets/b371a32c-6254-4bc5-b356-51fe9abfd429" />
+
+---
+
 
 ## Containerized Deployment (Docker Compose)
 
