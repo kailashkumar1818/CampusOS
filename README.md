@@ -48,7 +48,7 @@ CampusOS is a centralized university management system designed for students, fa
 ## Repository Structure
 
 ```
-collage-management-system/
+CampusOS/
 ├── docker-compose.yml              # PostgreSQL, Backend, and Frontend orchestration
 ├── package.json                    # Monorepo scripts for client and server
 ├── index.html                      # Static development launcher page
