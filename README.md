@@ -1,181 +1,280 @@
-# CampusOS – Complete University Management Ecosystem
+# CampusOS - University Management Platform
 
-CampusOS is a production-quality, centralized university management SaaS platform engineered to seamlessly connect students, faculty members, and university administrators. Built with a modern, high-velocity design inspired by Linear, Notion, and Stripe Dashboard, CampusOS delivers real-time event distribution, role-based data isolation, and comprehensive academic operations.
-
----
-
-## 🚀 Key Highlights & Architectural Features
-
-- **Multi-Role Access Control (RBAC):** Dedicated workspaces for **Students**, **Faculty**, and **Administrators** with strict JWT claims verification and route guards.
-- **Event-Driven Real-Time Bus:** Instant notifications powered by **Socket.io** for assignment releases, grades, roll-call attendance, hostel issue updates, and emergency bulletins.
-- **Statutory Attendance Engine:** Automatic per-subject attendance percentages, cumulative attendance tracking, and threshold alerts for students falling below the mandatory 75% limit.
-- **Coursework & Assessment Pipeline:** Faculty assignment authoring with document distribution, student submission with file uploads (Multer), inline grading, and feedback loops.
-- **Formal Examinations & Results:** Examination timetabling, room assignment, faculty marks uploading, and student grade cards.
-- **Facilities & Hostel Grievance Triage:** Student ticket logging by category (Plumbing, Wi-Fi, Electrical, Cleanliness), live status tracking, and administrator triage notes.
-- **Peer Knowledge Forum:** Academic discussion threads, subject filters, nested responses, and upvoting.
-- **Visual Analytics:** Interactive charts powered by **Recharts** displaying department-wise student density, attendance health, and maintenance ticket velocity.
-- **Enterprise Security:** bcrypt password hashing, HTTP security headers (`Helmet`), CORS policies, express-rate-limiting, Zod schema validation, and SQL injection protection via Prisma ORM.
+CampusOS is a centralized university management system designed for students, faculty members, and academic administrators. It provides role-based access control, real-time notifications, academic workflow management, attendance tracking, coursework submissions, examinations, hostel grievance triage, and analytics.
 
 ---
 
-## 🛠️ Technology Stack
+## Architecture and Key Features
+
+- **Role-Based Access Control (RBAC):** Separate access layers for Students, Faculty, and Administrators with JWT verification and route-level authorization guards.
+- **Real-Time Notification Bus:** Socket.io event distribution for coursework updates, grading alerts, attendance records, hostel complaint statuses, and university notices.
+- **Attendance Management:** Subject-wise and cumulative attendance tracking with automated threshold detection below 75%.
+- **Coursework and Assessments:** Faculty assignment distribution, student document uploads via Multer, submission review, inline grading, and feedback.
+- **Examinations and Grading:** Exam scheduling, room allocations, marks entry, and student performance transcripts.
+- **Hostel Grievance Triage:** Student maintenance requests (plumbing, electrical, cleanliness, networking), status workflows, and resolution notes.
+- **Academic Discussion Forum:** Categorized academic discussion threads, subject tags, nested comments, and post upvotes.
+- **Telemetry and Analytics:** Interactive dashboards for department densities, attendance distributions, and operational tickets.
+- **Security:** bcrypt password hashing, Helmet HTTP security headers, CORS origin controls, rate limiting, and Zod request validation.
+
+---
+
+## Technology Stack
 
 ### Frontend
-- **Framework:** React 18 + Vite
-- **Styling & Design System:** Tailwind CSS (custom dark/light tokens)
+- **Framework:** React 18, Vite
+- **Styling:** Tailwind CSS
 - **Icons:** Lucide React
-- **Charts & Telemetry:** Recharts
-- **Networking:** Axios with Bearer token interceptors
+- **Data Visualization:** Recharts
+- **HTTP Client:** Axios with Bearer token interceptors
 - **Routing:** React Router v6
-- **Real-Time Client:** Socket.io-client
+- **WebSockets:** Socket.io-client
 
 ### Backend
-- **Runtime:** Node.js (v20+)
-- **API Framework:** Express.js (Modular MVC architecture)
-- **Authentication:** JWT (JSON Web Tokens) & bcryptjs
-- **Validation Engine:** Zod
-- **File Upload Subsystem:** Multer
-- **Email Service:** Nodemailer (with development fallback)
-- **Real-Time Engine:** Socket.io
+- **Runtime:** Node.js (v18+)
+- **Framework:** Express.js (MVC architecture)
+- **Database ORM:** Prisma Client
+- **Authentication:** JSON Web Tokens (JWT) and bcryptjs
+- **Validation:** Zod
+- **File Handling:** Multer
+- **Mail Service:** Nodemailer
+- **Real-Time:** Socket.io
 
-### Database & ORM
-- **Database Engine:** PostgreSQL 16
-- **ORM:** Prisma Client with 20 relational models and automated migrations
-
-### Infrastructure & DevOps
-- **Containerization:** Docker & Docker Compose
-- **Continuous Integration:** GitHub Actions CI/CD pipeline
-- **Static Hosting:** Nginx / Vercel
-- **API Hosting:** Render / Docker Runner
+### Databases
+- **Primary Database:** PostgreSQL 16 (production and containerized local development)
+- **Local Alternative:** SQLite (schema file provided for low-footprint offline testing)
 
 ---
 
-## 📂 Repository Directory Layout
+## Repository Structure
 
 ```
-campusos/
-├── docker-compose.yml              # PostgreSQL + Backend + Frontend orchestration
-├── .github/workflows/ci.yml        # GitHub Actions continuous integration
+collage-management-system/
+├── docker-compose.yml              # PostgreSQL, Backend, and Frontend orchestration
+├── package.json                    # Monorepo scripts for client and server
+├── index.html                      # Static development launcher page
 │
-├── server/                         # Backend Application (Express + Prisma)
+├── server/                         # Express and Prisma API
 │   ├── Dockerfile
 │   ├── package.json
-│   ├── .env.example
+│   ├── .env.example                # Template environment variables
 │   ├── prisma/
-│   │   ├── schema.prisma           # Complete 20-model PostgreSQL schema
-│   │   └── seed.js                 # Institutional seed dataset
-│   ├── uploads/                    # Local storage volume for attachments
+│   │   ├── schema.prisma           # PostgreSQL schema (20 models)
+│   │   ├── schema.sqlite.prisma    # SQLite schema alternative
+│   │   ├── seed.js                 # Institutional database seeder
+│   │   └── dev.db                  # Local SQLite database file
+│   ├── uploads/                    # File upload storage
+│   ├── tests/                      # Vitest API test suite
 │   └── src/
-│       ├── config/                 # Prisma DB singleton & Socket.io server
-│       ├── controllers/            # Module controllers (Auth, Academic, Attendance, etc.)
-│       ├── middleware/             # Auth, RBAC, Zod, Multer, Error handlers
-│       ├── routes/                 # Master and domain route aggregators
-│       ├── validators/             # Zod schema definitions
-│       ├── utils/                  # JWT token, response formatters, mailers
-│       ├── app.js                  # Express application setup
-│       └── server.js               # HTTP & Socket.io server entry
+│       ├── config/                 # Database and Socket.io initialization
+│       ├── controllers/            # Route controllers
+│       ├── middleware/             # Auth, RBAC, file upload, validation
+│       ├── routes/                 # API route aggregators
+│       ├── validators/             # Zod validation schemas
+│       ├── utils/                  # JWT helpers, formatters, email utilities
+│       ├── app.js                  # Express application configuration
+│       └── server.js               # HTTP and WebSocket server entry point
 │
-└── client/                         # Frontend Application (React 18 + Vite)
+└── client/                         # React 18 and Vite frontend
     ├── Dockerfile
     ├── nginx.conf
     ├── package.json
     ├── tailwind.config.js
     ├── vite.config.js
     └── src/
-        ├── components/
-        │   ├── common/             # Button, Card, Badge, Modal, Skeleton
-        │   └── layout/             # Sidebar, Navbar, DashboardLayout
-        ├── context/                # AuthContext, SocketContext, ThemeContext
-        ├── pages/
-        │   ├── auth/               # Login (with Demo buttons), Register, ForgotPassword
-        │   ├── student/            # Dashboard, Attendance, Assignments, Exams, Hostel, Forum
-        │   ├── faculty/            # Dashboard, RollCall, AssignmentManager, MarksUpload
-        │   └── admin/              # Analytics Dashboard, Cohort, Faculty, Depts, Timetable
-        ├── services/               # Axios API client
-        ├── App.jsx                 # Route hierarchy & role guards
-        └── main.jsx
+        ├── components/             # Reusable UI and layout components
+        ├── context/                # Auth, Socket, and Theme React contexts
+        ├── pages/                  # Auth, Student, Faculty, and Admin views
+        ├── services/               # Axios API client and endpoints
+        ├── App.jsx                 # Application routes and guards
+        └── main.jsx                # Application root entry
 ```
 
 ---
 
-## ⚡ Quick Start Guide (Local Development)
+## Quick Start Guide (Local Development)
 
 ### Prerequisites
-- Node.js (v18+)
-- PostgreSQL (or run via Docker)
+- Node.js (v18 or higher)
+- npm (v9 or higher)
+- Docker (for PostgreSQL container) or an existing local PostgreSQL installation
 
-### 1. Database Setup
-Ensure PostgreSQL is running locally or start it via Docker:
+---
+
+### Step 1: Database Setup
+
+Start a local PostgreSQL 16 container:
+
 ```bash
-docker run --name campusos_pg -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=campusos_db -p 5432:5432 -d postgres:16-alpine
+docker run --name campusos_pg \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  -e POSTGRES_DB=campusos_db \
+  -p 5432:5432 \
+  -d postgres:16-alpine
 ```
 
-### 2. Backend Initialization
+If you already have PostgreSQL installed locally, ensure a database named `campusos_db` is created and accessible.
+
+---
+
+### Step 2: Backend Setup
+
+1. Navigate to the `server` directory:
+   ```bash
+   cd server
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Create the environment configuration file:
+   ```bash
+   cp .env.example .env
+   ```
+   Verify that `DATABASE_URL` in `.env` matches your PostgreSQL connection string:
+   ```env
+   PORT=5000
+   NODE_ENV=development
+   CLIENT_URL=http://localhost:5173
+   DATABASE_URL="postgresql://postgres:postgres@localhost:5432/campusos_db?schema=public"
+   JWT_SECRET="campusos_super_secret_jwt_key_2026_production_grade"
+   JWT_EXPIRES_IN="7d"
+   UPLOAD_DIR="./uploads"
+   ```
+
+4. Push the Prisma schema to the database:
+   ```bash
+   npx prisma db push
+   ```
+
+5. Generate the Prisma Client:
+   ```bash
+   npx prisma generate
+   ```
+
+6. Seed initial test data (Admin, Faculty, Students, Departments, Courses):
+   ```bash
+   npm run prisma:seed
+   ```
+
+7. (Optional) Run automated tests:
+   ```bash
+   npm test
+   ```
+
+8. Start the backend development server:
+   ```bash
+   npm run dev
+   ```
+   The backend API will be available at `http://localhost:5000/api/v1`.
+
+> **Note for SQLite usage:** If you want to run the backend without PostgreSQL, use the SQLite schema:
+> ```bash
+> npm run db:sqlite
+> ```
+
+---
+
+### Step 3: Frontend Setup
+
+1. Open a new terminal and navigate to the `client` directory:
+   ```bash
+   cd client
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the Vite development server:
+   ```bash
+   npm run dev
+   ```
+   The frontend will be available at `http://localhost:5173`.
+   
+Requests to `/api/*` are automatically forwarded to `http://127.0.0.1:5000` via the Vite proxy configured in `client/vite.config.js`.
+
+---
+
+### Alternative: Root Monorepo Commands
+
+From the root project directory, you can run:
+
 ```bash
-cd server
-npm install
+# Start backend server
+npm run server
 
-# Push database schema & generate Prisma client
-npx prisma db push
-npx prisma generate
+# Start frontend client (in separate terminal)
+npm run client
 
-# Populate sample university database (Students, Faculty, Courses, Attendance, Assignments)
-npm run prisma:seed
+# Run database seed
+npm run seed
 
-# Start backend development server
-npm run dev
-# -> Running at http://localhost:5000/api/v1
-```
-
-### 3. Frontend Initialization
-In a separate terminal:
-```bash
-cd client
-npm install
-npm run dev
-# -> Running at http://localhost:5173
+# Build client for production
+npm run build
 ```
 
 ---
 
-## 🔑 Demo Access Credentials
+## Seed Data and Demo Credentials
 
-The database seed provides ready-to-test accounts with pre-loaded mock courses, attendance logs, and assignments:
+The database seeder (`server/prisma/seed.js`) provides pre-configured accounts for testing each role:
 
-| Role | Email | Password | Pre-loaded Workspaces |
-| :--- | :--- | :--- | :--- |
-| **Administrator** | `admin@campusos.edu` | `Admin@123456` | Complete system telemetry, user directories, curriculum catalog, hostel triage |
-| **Faculty Member** | `faculty.johnson@campusos.edu` | `Faculty@123456` | Data Structures (CS301), Web Dev (CS304), roll-call roster, grading drawer |
-| **Student (Alex)** | `student.alex@campusos.edu` | `Student@123456` | B.Tech CSE Semester 5, active attendance charts, assignment submissions, hostel room |
-| **Student (Sarah)** | `student.sarah@campusos.edu` | `Student@123456` | Peer student cohort member |
+| Role | Username / Identifier | Email | Password | Pre-loaded Content |
+| :--- | :--- | :--- | :--- | :--- |
+| **Administrator** | `admin` | `admin@campusos.edu` | `Admin@123456` | Institution telemetry, department rosters, timetable scheduler, grievance queue |
+| **Faculty Member** | `FAC-CSE-101` | `faculty.johnson@campusos.edu` | `Faculty@123456` | CS301 (Data Structures), CS304 (Web Dev), attendance roster, assignment manager |
+| **Student (Primary)** | `EN2024CS042` | `rahul.kumar@campusos.edu` | `Student@123456` | B.Tech CSE Semester 5, subject enrollments, assignment submissions, hostel room B-204 |
+| **Student (Peer)** | `EN2024CS043` | `student.sarah@campusos.edu` | `Student@123456` | Cohort peer student account |
 
-*Tip: You can click the one-click demo persona buttons directly on the `/login` screen to sign in instantly.*
+*Note: The login page at `http://localhost:5173/login` includes quick-fill buttons for Student, Faculty, and Admin credentials.*
 
 ---
 
-## 🚢 Production Deployment
+## API Overview
 
-### Docker Compose
-Run the entire ecosystem with a single command:
+Base URL: `http://localhost:5000/api/v1`
+
+| Prefix | Description | Primary Endpoints |
+| :--- | :--- | :--- |
+| `/auth` | Authentication and session recovery | `POST /login`, `POST /register`, `POST /forgot-password`, `GET /me` |
+| `/users` | User profile and account management | `GET /profile`, `PUT /profile`, `GET /students`, `GET /faculty` |
+| `/academic` | Curriculum and departmental structure | `GET /departments`, `GET /courses`, `GET /semesters`, `GET /subjects` |
+| `/attendance` | Attendance tracking and roll call | `GET /subject/:id`, `POST /mark`, `GET /student/cumulative` |
+| `/assignments` | Coursework distribution and grading | `GET /subject/:id`, `POST /create`, `POST /:id/submit`, `PUT /submission/:id/grade` |
+| `/examinations` | Exam timetables and mark entry | `GET /`, `POST /`, `POST /marks`, `GET /student/:id` |
+| `/timetable` | Weekly schedule slots | `GET /semester/:id`, `POST /slot`, `DELETE /slot/:id` |
+| `/announcements`| Campus bulletins and notifications | `GET /`, `POST /create`, `DELETE /:id` |
+| `/complaints` | Hostel maintenance issues | `GET /`, `POST /create`, `PUT /:id/status` |
+| `/forum` | Academic discussions | `GET /posts`, `POST /posts`, `POST /posts/:id/comments`, `POST /posts/:id/like` |
+| `/analytics` | System reports and telemetry | `GET /admin/stats`, `GET /faculty/stats` |
+| `/notifications`| Real-time alerts inbox | `GET /`, `PUT /read-all`, `PUT /:id/read` |
+| `/health` | API gateway health check | `GET /health` |
+
+---
+
+## Containerized Deployment (Docker Compose)
+
+To spin up the entire application stack (PostgreSQL, Backend API, and Frontend web client) in production mode:
+
 ```bash
 docker-compose up --build -d
 ```
-- Frontend available at: `http://localhost:5173`
-- Backend API available at: `http://localhost:5000`
-- PostgreSQL available at: `localhost:5432`
 
-### Vercel (Frontend)
-- Build Command: `npm run build`
-- Output Directory: `dist`
-- Environment Variables:
-  - `VITE_API_URL`: `https://your-backend-api.onrender.com/api/v1`
-  - `VITE_SOCKET_URL`: `https://your-backend-api.onrender.com`
+### Published Ports
+- **Frontend Web UI:** `http://localhost:5173`
+- **Backend API:** `http://localhost:5000`
+- **PostgreSQL Database:** `localhost:5432`
 
-### Render / Fly.io (Backend)
-- Build Command: `npm ci && npx prisma generate`
-- Start Command: `node src/server.js`
-- Environment Variables:
-  - `DATABASE_URL`: `postgresql://user:pass@host:5432/campusos_db?schema=public`
-  - `JWT_SECRET`: `<secure-random-token>`
-  - `CLIENT_URL`: `https://your-frontend.vercel.app`
+To shut down the stack:
+```bash
+docker-compose down
+```
 
+To shut down and wipe persistent volume storage:
+```bash
+docker-compose down -v
+```
